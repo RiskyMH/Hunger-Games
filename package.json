@@ -1,0 +1,23 @@
+{
+  "name": "hunger-games",
+  "version": "1.0.0",
+  "description": "Chaos...",
+  "scripts": {
+    "start:game": "bun ./apps/game/src/main.ts",
+    "dev:game": "bun --watch ./apps/game/src/main.ts",
+    "build:website": "cd apps/visualization && next build",
+    "dev:website": "cd apps/visualization && next dev"
+  },
+  "author": "",
+  "workspaces": [
+    "apps/game",
+    "apps/visualization"
+  ],
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.2.2"
+  }
+}

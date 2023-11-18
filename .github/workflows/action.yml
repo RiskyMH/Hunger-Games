@@ -1,0 +1,80 @@
+name: Run Game!
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  run-game:
+    name: Run Game & Build Website
+    runs-on: ubuntu-latest
+    steps:
+      - id: checkout
+        name: Checkout
+        uses: actions/checkout@v4
+        
+      - id: setup-bun
+        name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - id: install-deps
+        name: Install Dependencies
+        run: bun install
+
+      - id: run-game
+        name: Run Game
+        run: bun run start:game
+
+        # Website:
+      - id: setup-pages
+        name: Setup Pages
+        uses: actions/configure-pages@v3
+        with:
+            static_site_generator: next
+            generator_config_file: ./apps/visualization/next.config.js
+
+      - id: restore-nextjs-cache
+        name: Restore cache (nextjs)
+        uses: actions/cache@v3
+        with:
+          path: ./apps/visualization/.next/cache
+          # Generate a new cache whenever packages or source files change.
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/bun.lockb') }}-${{ hashFiles('./apps/visualization/**.[jt]s', './apps/visualization/**.[jt]sx') }}
+          # If source files changed but packages didn't, rebuild from a prior cache.
+          restore-keys: ${{ runner.os }}-nextjs-${{ hashFiles('**/bun.lockb') }}-
+      
+      - id: build-website
+        name: Build Website
+        run: bun run build:website
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: ./apps/visualization/out
+
+ # Deploy website
+  deploy-website:
+    name: Deploy Website
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: run-game
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
