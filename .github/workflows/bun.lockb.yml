@@ -42,7 +42,6 @@ jobs:
       # Determine the base commit for comparison
       - name: Make Diff
         run: |
-          echo "```diff" > bun.diff
           if ${{ github.event_name == 'pull_request' }}; then
             git diff ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} bun.lockb
             git diff ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} bun.lockb >> bun.diff
@@ -50,8 +49,10 @@ jobs:
             git diff ${{ github.event.before }}..${{ github.event.after }} bun.lockb
             git diff ${{ github.event.before }}..${{ github.event.after }} bun.lockb >> bun.diff
           fi
-          echo "```" >> bun.diff
 
       - name: Echo Diff to $GITHUB_STEP_SUMMARY
         if: always()
-        run: cat bun.diff >> GITHUB_STEP_SUMMARY
+        run: |
+          echo "\`\`\`diff" >> GITHUB_STEP_SUMMARY
+          cat bun.diff >> GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> GITHUB_STEP_SUMMARY
