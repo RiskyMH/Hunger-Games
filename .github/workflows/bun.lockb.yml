@@ -51,7 +51,11 @@ jobs:
 
       - id: make-diff
         name: Make diff
-        run: git diff $DIFF_REFS bun.lockb
+        run: git diff "$DIFF_REFS" bun.lockb
+
+      - id: make-diff-1-5
+        name: Make diff 1.5
+        run: git diff ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}  bun.lockb
       
       - id: make-diff-2
         name: Make diff 2
