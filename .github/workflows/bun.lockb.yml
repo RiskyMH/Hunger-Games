@@ -51,8 +51,8 @@ jobs:
 
       - id: make-diff
         name: Make diff
-        run: git diff "$DIFF_REFS" ./bun.lockb
+        run: git diff $DIFF_REFS bun.lockb
       
       - id: make-diff-2
         name: Make diff 2
-        run: git diff "$DIFF_REFS":bun.lockb bun.lockb >> $GITHUB_STEP_SUMMARY
+        run: git diff $DIFF_REFS bun.lockb >> $GITHUB_STEP_SUMMARY
