@@ -2,6 +2,8 @@ name: Bun Diff
 
 on:
   push:
+    branches: 
+      - main
     paths:
       - bun.lockb
   pull_request:
