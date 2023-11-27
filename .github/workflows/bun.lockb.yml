@@ -40,23 +40,18 @@ jobs:
           git config diff.lockb.binary true
 
       # Determine the base commit for comparison
-      - id: determine-base-commit
-        name: Determine base commit
+      - name: Make Diff
         run: |
+          echo "```diff" > bun.diff
           if ${{ github.event_name == 'pull_request' }}; then
-            echo "DIFF_REFS=${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
+            git diff ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} bun.lockb
+            git diff ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }} bun.lockb >> bun.diff
           else
-            echo "DIFF_REFS=${{ github.event.before }}..${{ github.event.after }}"
+            git diff ${{ github.event.before }}..${{ github.event.after }} bun.lockb
+            git diff ${{ github.event.before }}..${{ github.event.after }} bun.lockb >> bun.diff
           fi
+          echo "```" >> bun.diff
 
-      - id: make-diff
-        name: Make diff
-        run: git diff $DIFF_REFS bun.lockb
-
-      - id: make-diff-1-5
-        name: Make diff 1.5
-        run: git diff ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}  bun.lockb
-      
-      - id: make-diff-2
-        name: Make diff 2
-        run: git diff $DIFF_REFS bun.lockb >> $GITHUB_STEP_SUMMARY
+      - name: Echo Diff to $GITHUB_STEP_SUMMARY
+        if: always()
+        run: cat bun.diff >> GITHUB_STEP_SUMMARY
