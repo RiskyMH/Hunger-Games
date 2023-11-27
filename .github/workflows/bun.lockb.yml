@@ -1,0 +1,56 @@
+name: Bun Diff
+
+on:
+  push:
+    paths:
+      - bun.lockb
+  pull_request:
+    paths:
+      - bun.lockb
+
+permissions:
+  contents: read
+
+
+jobs:
+  diff:
+    name: Diff the changes using yarn
+    runs-on: ubuntu-latest
+    steps:
+      - id: checkout
+        name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # sparse-checkout: bun.lockb
+          # sparse-checkout-cone-mode: false
+          fetch-depth: 0
+        
+      - id: setup-bun
+        name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - id: add-git-config
+        name: Add git config
+        run: |
+          git config diff.lockb.textconv bun
+          git config diff.lockb.binary true
+
+      # Determine the base commit for comparison
+      - id: determine-base-commit
+        name: Determine base commit
+        run: |
+          if ${{ github.event_name == 'pull_request' }}; then
+            echo "DIFF_REFS=${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
+          else
+            echo "DIFF_REFS=${{ github.event.before }}..${{ github.event.after }}"
+          fi
+
+      - id: make-diff
+        name: Make diff
+        run: git diff "$DIFF_REFS" ./bun.lockb
+      
+      - id: make-diff-2
+        name: Make diff 2
+        run: git diff "$DIFF_REFS":bun.lockb bun.lockb >> $GITHUB_STEP_SUMMARY
