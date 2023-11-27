@@ -53,6 +53,6 @@ jobs:
       - name: Echo Diff to $GITHUB_STEP_SUMMARY
         if: always()
         run: |
-          echo "\`\`\`diff" >> GITHUB_STEP_SUMMARY
-          cat bun.diff >> GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> GITHUB_STEP_SUMMARY
+          echo "\`\`\`diff" >> $GITHUB_STEP_SUMMARY
+          cat bun.diff >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
