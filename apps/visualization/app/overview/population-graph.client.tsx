@@ -64,6 +64,8 @@ export default function PopulationGraph() {
     showLegend: false,
     valueFormatter: (value) => `${value} people`,
     yAxisWidth: 56,
+    animationDuration: 700,
+    showAnimation: true,
   };
 
 

@@ -66,6 +66,8 @@ export default function LeaderboardGraph() {
     showLegend: false,
     valueFormatter,
     yAxisWidth: 56,
+    animationDuration: 700,
+    showAnimation: true,
   };
 
 

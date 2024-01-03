@@ -68,6 +68,8 @@ export default function ActionsGraph() {
     showLegend: false,
     // valueFormatter: (value) => `${value} people`,
     yAxisWidth: 56,
+    animationDuration: 700,
+    showAnimation: true,
   };
 
 

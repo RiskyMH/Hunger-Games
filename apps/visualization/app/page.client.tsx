@@ -15,7 +15,7 @@ import PeopleList from "@/app/people/people-list.client";
 import AgeGraph from "@/app/overview/age-graph.client";
 import ActionsGraph from "./overview/actions-graph.client";
 import PopulationGraph from "./overview/population-graph.client";
-import LeaderboardGraph from "./overview/leaderboard";
+import LeaderboardGraph from "./overview/leaderboard.client";
 
 
 export default function Dashboard() {

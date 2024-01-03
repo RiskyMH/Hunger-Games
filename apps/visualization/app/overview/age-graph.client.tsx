@@ -73,6 +73,8 @@ export default function AgeGraph() {
     showLegend: false,
     valueFormatter: (value) => `${value} people`,
     yAxisWidth: 56,
+    animationDuration: 700,
+    showAnimation: true,
   };
 
 
